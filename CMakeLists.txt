@@ -77,5 +77,13 @@ target_link_libraries(serial_link
   uc_module
   message
   arduino_simulator)
+add_library(arduinoio
+  arduinoio.cc
+  arduinoio.h)
+target_link_libraries(arduinoio
+  message
+  uc_module
+  serial_link
+  arduino_simulator)
 
 
