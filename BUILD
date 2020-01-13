@@ -76,3 +76,15 @@ cc_binary(
         ":arduino_simulator",
     ],
 )
+
+cc_library(
+    name = "arduinoio",
+    srcs = ["arduinoio.cc"],
+    hdrs = ["arduinoio.h"],
+    deps = [
+        ":message",
+        ":uc_module",
+        ":serial_link",
+        ":arduino_simulator",
+    ],
+)

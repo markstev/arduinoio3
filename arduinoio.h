@@ -1,12 +1,6 @@
 #ifndef JDUINO_UC_ARDUINOIO_H_
 #define JDUINO_UC_ARDUINOIO_H_
 
-#if defined(ARDUINO) && ARDUINO >= 100
-  #include "Arduino.h"
-#else
-  #include "WProgram.h"
-#endif 
-
 #include "message.h"
 #include "uc_module.h"
 
