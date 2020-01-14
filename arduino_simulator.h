@@ -40,17 +40,17 @@ class ArduinoInterface {
   virtual void bool available() = 0;
 };
 
-class ArduinoInterface {
+class FakeArduino : public ArduinoInterface {
  public:
-   ~ArduinoInterface();
+   ~FakeArduino();
 
-  void digitalWrite(const unsigned int pin, bool value);
-  bool digitalRead(const unsigned int pin);
-  unsigned long micros();
+  void digitalWrite(const unsigned int pin, bool value) override;
+  bool digitalRead(const unsigned int pin) override;
+  unsigned long micros() override;
 
-  void write(const unsigned char c);
-  int read();
-  bool available();
+  void write(const unsigned char c) override;
+  int read() override;
+  bool available() override;
 
   bool UseFiles(const char *incoming, const char *outgoing);
 

@@ -76,18 +76,18 @@ FakeClock* GetFakeClock() {
 }
 
 
-SerialAbstraction::~SerialAbstraction() {
+FakeArduino::~FakeArduino() {
   fclose(incoming_file_);
   fclose(outgoing_file_);
 }
 
-void SerialAbstraction::write(const unsigned char c) {
+void FakeArduino::write(const unsigned char c) {
   fputc(c, outgoing_file_);
   fflush(outgoing_file_);
   printf("Wrote %c\n", c);
 }
 
-int SerialAbstraction::read() {
+int FakeArduino::read() {
   if (next_byte_ != EOF) {
     const int ret = next_byte_;
     next_byte_ = EOF;
@@ -101,7 +101,7 @@ int SerialAbstraction::read() {
   return read_result;
 }
 
-bool SerialAbstraction::available() {
+bool FakeArduino::available() {
   if (next_byte_ != EOF) {
     return true;
   }
@@ -114,7 +114,7 @@ bool SerialAbstraction::available() {
   }
 }
 
-bool SerialAbstraction::UseFiles(const char *incoming, const char *outgoing) {
+bool FakeArduino::UseFiles(const char *incoming, const char *outgoing) {
   incoming_file_ = fopen(incoming, "rb+");
   if (incoming_file_ == nullptr) {
     // Creates the file and tries again.
@@ -125,15 +125,15 @@ bool SerialAbstraction::UseFiles(const char *incoming, const char *outgoing) {
   return incoming_file_ != nullptr && outgoing_file_ != nullptr;
 }
 
-unsigned long micros() {
+unsigned long FakeArduino::micros() {
   return GetClock()->micros();
 }
 
-void digitalWrite(const unsigned int pin, bool value) {
+void FakeArduino::digitalWrite(const unsigned int pin, bool value) {
   GetPins().SetPin(pin, value);
 }
 
-bool digitalRead(const unsigned int pin) {
+bool FakeArduino::digitalRead(const unsigned int pin) {
   return GetPins().GetPin(pin);
 }
 
