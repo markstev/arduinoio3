@@ -6,10 +6,6 @@
 // This interface mimics Arduino.h, so it can be used as a drop-in replacement.
 namespace arduinoio {
 
-void digitalWrite(const unsigned int pin, bool value);
-bool digitalRead(const unsigned int pin);
-unsigned long micros();
-
 // Interface for a variety of ways to check the current time, including fake clocks.
 class Clock {
  public:
@@ -31,9 +27,27 @@ class FakeClock : public Clock {
 
 FakeClock* GetFakeClock();
 
-class SerialAbstraction {
+class ArduinoInterface {
  public:
-   ~SerialAbstraction();
+   virtual ~ArduinoInterface() {}
+
+  virtual void digitalWrite(const unsigned int pin, bool value) = 0;
+  virtual bool digitalRead(const unsigned int pin) = 0;
+  virtual unsigned long micros() = 0;
+
+  virtual void write(const unsigned char c) = 0;
+  virtual void int read() = 0;
+  virtual void bool available() = 0;
+};
+
+class ArduinoInterface {
+ public:
+   ~ArduinoInterface();
+
+  void digitalWrite(const unsigned int pin, bool value);
+  bool digitalRead(const unsigned int pin);
+  unsigned long micros();
+
   void write(const unsigned char c);
   int read();
   bool available();

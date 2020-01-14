@@ -55,6 +55,8 @@ if(APPLE)
 elseif(UNIX)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--build-id")
 endif()
+set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/../../../arduinoio/cmake/ArduinoToolchain.cmake) # Arduino Toolchain
+set(ARDUINO_SDK /usr/share/arduino-1.0.6)
 
 enable_testing()
 
@@ -62,7 +64,7 @@ add_library(hardware_abstraction INTERFACE)
 target_link_libraries(hardware_abstraction INTERFACE
   arduino_simulator)
 add_library(arduino_simulator
-  arduino_simulator.cc
+  real_arduino.cc  # TODO Fork for embedded vs test
   arduino_simulator.h)
 add_library(message
   message.cc
