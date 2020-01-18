@@ -6,24 +6,24 @@ namespace arduinoio {
 namespace {
 
 TEST(BidirSerialModuleTest, SendsErrorEventually) {
-  SerialAbstraction module_serial;
-  SerialAbstraction test_serial;
+  FakeArduino module_serial;
+  FakeArduino test_serial;
   ASSERT_TRUE(module_serial.UseFiles("/tmp/bsmt_1_a", "/tmp/bsmt_1_b"));
   ASSERT_TRUE(test_serial.UseFiles("/tmp/bsmt_1_b", "/tmp/bsmt_1_a"));
   BidirSerialRXModule module(&module_serial, 0);
-  while (micros() < 150000LL) {
+  while (module_serial.micros() < 150000LL) {
     EXPECT_EQ(nullptr, module.Tick());
     EXPECT_EQ(false, test_serial.available());
   }
-  while (micros() < 210000LL);
+  while (module_serial.micros() < 210000LL);
   EXPECT_EQ(nullptr, module.Tick());
   EXPECT_EQ(true, test_serial.available());
   EXPECT_EQ(ERROR, test_serial.read());
 }
 
 TEST(BidirSerialModuleTest, SendsReadyInResponse) {
-  SerialAbstraction module_serial;
-  SerialAbstraction test_serial;
+  FakeArduino module_serial;
+  FakeArduino test_serial;
   ASSERT_TRUE(module_serial.UseFiles("/tmp/bsmt_2_a", "/tmp/bsmt_2_b"));
   ASSERT_TRUE(test_serial.UseFiles("/tmp/bsmt_2_b", "/tmp/bsmt_2_a"));
   BidirSerialRXModule module(&module_serial, 0);
@@ -36,8 +36,8 @@ TEST(BidirSerialModuleTest, SendsReadyInResponse) {
 }
 
 TEST(BidirSerialModuleTest, TransmitOneMessage) {
-  SerialAbstraction module_serial;
-  SerialAbstraction test_serial;
+  FakeArduino module_serial;
+  FakeArduino test_serial;
   ASSERT_TRUE(module_serial.UseFiles("/tmp/bsmt_3_a", "/tmp/bsmt_3_b"));
   ASSERT_TRUE(test_serial.UseFiles("/tmp/bsmt_3_b", "/tmp/bsmt_3_a"));
   BidirSerialRXModule module(&module_serial, 0);
@@ -75,8 +75,8 @@ TEST(BidirSerialModuleTest, TransmitOneMessage) {
 }
 
 TEST(BidirSerialModuleTest, ReceiveOneMessage) {
-  SerialAbstraction module_serial;
-  SerialAbstraction test_serial;
+  FakeArduino module_serial;
+  FakeArduino test_serial;
   ASSERT_TRUE(module_serial.UseFiles("/tmp/bsmt_4_a", "/tmp/bsmt_4_b"));
   ASSERT_TRUE(test_serial.UseFiles("/tmp/bsmt_4_b", "/tmp/bsmt_4_a"));
   BidirSerialRXModule module(&module_serial, 0);

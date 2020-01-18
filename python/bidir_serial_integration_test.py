@@ -26,7 +26,7 @@ class IntegrationTest(unittest.TestCase):
         self.serial_connection = FileSerialConnection(name + str(time.time()), 9600)
         self.thread = BidirSerialThread(self.serial_connection)
         self.cc_subprocess = subprocess.Popen([
-            "serial_link/bidir_serial_main_for_test",
+            "bidir_serial_main_for_test",
             self.serial_connection.outgoing_filename,
             self.serial_connection.incoming_filename,
             '0'])

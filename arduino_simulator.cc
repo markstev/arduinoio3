@@ -1,7 +1,6 @@
 #include "arduino_simulator.h"
 #include <chrono>
 #include <ctime>
-#include <map>
 
 namespace arduinoio {
 namespace {
@@ -36,28 +35,6 @@ Clock* GetClock() {
   return clock_in_use;
 }
 
-class FakePins {
- public:
-  void SetPin(const unsigned int pin, bool high) {
-    pin_states_[pin] = high;
-  }
-
-  bool GetPin(const unsigned int pin) {
-    return pin_states_[pin];
-  }
-
-  // TODO: May need to support pin modes.
-
- private:
-  std::map<const unsigned int, bool> pin_states_;
-  std::map<const unsigned int, bool> pin_modes_;
-};
-
-FakePins& GetPins() {
-  static FakePins fake_pins;
-  return fake_pins;
-}
-
 }  // namespace
 
 FakeClock::FakeClock() : current_time_micros_(0) {}
@@ -77,8 +54,12 @@ FakeClock* GetFakeClock() {
 
 
 FakeArduino::~FakeArduino() {
-  fclose(incoming_file_);
-  fclose(outgoing_file_);
+  if (incoming_file_ != nullptr) {
+    fclose(incoming_file_);
+  }
+  if (outgoing_file_ != nullptr) {
+    fclose(outgoing_file_);
+  }
 }
 
 void FakeArduino::write(const unsigned char c) {
@@ -130,11 +111,11 @@ unsigned long FakeArduino::micros() {
 }
 
 void FakeArduino::digitalWrite(const unsigned int pin, bool value) {
-  GetPins().SetPin(pin, value);
+  pin_states_[pin] = value;
 }
 
 bool FakeArduino::digitalRead(const unsigned int pin) {
-  return GetPins().GetPin(pin);
+  return pin_states_[pin];
 }
 
 }  // namespace arduinoio

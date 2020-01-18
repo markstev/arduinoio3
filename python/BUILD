@@ -37,7 +37,7 @@ py_test(
     srcs = ["bidir_serial_integration_test.py"],
     deps = [":bidir_serial_control",
             ],
-    data = [":bidir_serial_main_for_test"],
+    data = ["//:bidir_serial_main_for_test"],
 )
 
 

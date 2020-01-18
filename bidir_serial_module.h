@@ -43,7 +43,7 @@ const unsigned char ERROR = 0x80;
 // Error, resend: 0x45
 class BidirSerialRXModule : public UCModule {
  public:
-  BidirSerialRXModule(SerialAbstraction *serial, int address);
+  BidirSerialRXModule(ArduinoInterface *arduino, int address);
 
   // Handles any incoming/outgoing transmissions. Returns a non-null message on the tick
   // when an incoming message is completed.
@@ -62,7 +62,7 @@ class BidirSerialRXModule : public UCModule {
   bool ReadFlushingErrors(unsigned char *output);
   bool ReadWithTimeout(unsigned char *output);
 
-  SerialAbstraction *serial_;
+  ArduinoInterface *arduino_;
   int address_;
   unsigned char transmit_state_;
   unsigned char receive_state_;

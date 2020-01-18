@@ -10,20 +10,20 @@ const unsigned long kCommunicationTimeout = 200000;  // 0.2s in usec
 }  // namespace
 
 BidirSerialRXModule::BidirSerialRXModule(
-    SerialAbstraction *serial,
+    ArduinoInterface *arduino,
     int address)
-  : serial_(serial), address_(address), transmit_state_(READY_AND_DONE),
+  : arduino_(arduino), address_(address), transmit_state_(READY_AND_DONE),
   receive_state_(READY_AND_DONE),
-  last_communication_time_(micros()) {
+  last_communication_time_(arduino->micros()) {
 }
 
 const Message* BidirSerialRXModule::Tick() {
   // Receiving
   unsigned char next_rx_command = 0x00;
   if (!ReadFlushingErrors(&next_rx_command)) {
-    if (micros() - last_communication_time_ > kCommunicationTimeout) {
+    if (arduino_->micros() - last_communication_time_ > kCommunicationTimeout) {
       SendError();
-      last_communication_time_ = micros();
+      last_communication_time_ = arduino_->micros();
     }
     return nullptr;
   }
@@ -81,15 +81,15 @@ const Message* BidirSerialRXModule::Tick() {
       transmit_state_ = READY_AND_DONE;
       // FALLTHROUGH_INTENDED
     case READY_AND_DONE:
-      serial_->write(transmit_state_);
+      arduino_->write(transmit_state_);
       break;
     case READY_AND_SENDING: {
       const int kMaxBytesToSend = 0x0f;
       const int num_bytes_to_send = fmin(kMaxBytesToSend,
           length_sending_ - next_send_index_);
-      serial_->write(transmit_state_ | num_bytes_to_send);
+      arduino_->write(transmit_state_ | num_bytes_to_send);
       for (int i = 0; i < num_bytes_to_send; ++i, ++next_send_index_) {
-        serial_->write(bytes_sending_[next_send_index_]);
+        arduino_->write(bytes_sending_[next_send_index_]);
       }
       if (next_send_index_ == length_sending_) {
         transmit_state_ = SENT_LAST;
@@ -100,31 +100,31 @@ const Message* BidirSerialRXModule::Tick() {
       SendError();
       break;
   }
-  last_communication_time_ = micros();
+  last_communication_time_ = arduino_->micros();
   return finished ? &message_ : nullptr;
 }
 
 bool BidirSerialRXModule::ReadFlushingErrors(unsigned char *output) {
   bool read_something = false;
-  while (serial_->available()) {
+  while (arduino_->available()) {
     read_something = true;
-    *output = (unsigned char)serial_->read() & 0xff;
+    *output = (unsigned char)arduino_->read() & 0xff;
     if (*output != ERROR) return true;
   }
   return read_something;
 }
 
 bool BidirSerialRXModule::ReadWithTimeout(unsigned char *output) {
-  const unsigned long timeout = micros() + 200000LL;
-  while (!serial_->available()) {
-    if (micros() > timeout) return false;
+  const unsigned long timeout = arduino_->micros() + 200000LL;
+  while (!arduino_->available()) {
+    if (arduino_->micros() > timeout) return false;
   }
-  *output = (unsigned char)serial_->read() & 0xff;
+  *output = (unsigned char)arduino_->read() & 0xff;
   return true;
 }
 
 void BidirSerialRXModule::SendError() {
-  serial_->write(ERROR);
+  arduino_->write(ERROR);
   ResetRX();
 }
 

@@ -2,6 +2,7 @@
 #define hardware_simulator_arduino_simulator_h_
 
 #include <stdio.h>
+#include <map>
 
 // This interface mimics Arduino.h, so it can be used as a drop-in replacement.
 namespace arduinoio {
@@ -36,8 +37,8 @@ class ArduinoInterface {
   virtual unsigned long micros() = 0;
 
   virtual void write(const unsigned char c) = 0;
-  virtual void int read() = 0;
-  virtual void bool available() = 0;
+  virtual int read() = 0;
+  virtual bool available() = 0;
 };
 
 class FakeArduino : public ArduinoInterface {
@@ -55,8 +56,11 @@ class FakeArduino : public ArduinoInterface {
   bool UseFiles(const char *incoming, const char *outgoing);
 
  private:
-  FILE *incoming_file_, *outgoing_file_;
+  FILE *incoming_file_ = nullptr;
+  FILE *outgoing_file_ = nullptr;
   int next_byte_ = EOF;
+  std::map<const unsigned int, bool> pin_states_;
+  std::map<const unsigned int, bool> pin_modes_;
 };
 
 }  // namespace arduinoio

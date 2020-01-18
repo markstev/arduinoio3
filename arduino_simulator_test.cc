@@ -6,27 +6,29 @@
 namespace arduinoio {
 namespace {
 
-TEST(HardwareAbstractionTest, WriteSomePins) {
+TEST(HardwareAbstractionTest, digitalWriteSomePins) {
   // Just makes sure it doesn't crash.
-  digitalWrite(1, true);
-  digitalWrite(1, false);
-  EXPECT_EQ(false, digitalRead(2));
-  EXPECT_EQ(false, digitalRead(1));
-  digitalWrite(1, true);
-  EXPECT_EQ(true, digitalRead(1));
-  digitalWrite(10, true);
-  EXPECT_EQ(true, digitalRead(10));
+  FakeArduino arduino;
+  arduino.digitalWrite(1, true);
+  arduino.digitalWrite(1, false);
+  EXPECT_EQ(false, arduino.digitalRead(2));
+  EXPECT_EQ(false, arduino.digitalRead(1));
+  arduino.digitalWrite(1, true);
+  EXPECT_EQ(true, arduino.digitalRead(1));
+  arduino.digitalWrite(10, true);
+  EXPECT_EQ(true, arduino.digitalRead(10));
 }
 
-TEST(HardwareAbstractionTest, WriteSomePins2) {
-  digitalWrite(10, true);
-  EXPECT_EQ(true, digitalRead(10));
-  digitalWrite(10, false);
-  EXPECT_EQ(false, digitalRead(10));
+TEST(HardwareAbstractionTest, digitalWriteSomePins2) {
+  FakeArduino arduino;
+  arduino.digitalWrite(10, true);
+  EXPECT_EQ(true, arduino.digitalRead(10));
+  arduino.digitalWrite(10, false);
+  EXPECT_EQ(false, arduino.digitalRead(10));
 }
 
 TEST(HardwareAbstractionTest, SerialIO) {
-  SerialAbstraction s0, s1;
+  FakeArduino s0, s1;
   ASSERT_TRUE(s0.UseFiles("/tmp/test_serial_io_a", "/tmp/test_serial_io_b"));
   ASSERT_TRUE(s1.UseFiles("/tmp/test_serial_io_b", "/tmp/test_serial_io_a"));
   EXPECT_FALSE(s0.available());

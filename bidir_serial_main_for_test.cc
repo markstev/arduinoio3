@@ -13,9 +13,9 @@ int main(int argc, char **argv) {
     printf("Call with args:\nbidir_serial_main <incoming serial filename> <outgoing serial filename> <address>");
     return 1;
   }
-  arduinoio::SerialAbstraction module_serial;
-  module_serial.UseFiles(argv[1], argv[2]);
-  arduinoio::BidirSerialRXModule module(&module_serial, atoi(argv[3]));
+  arduinoio::FakeArduino fake_arduino;
+  fake_arduino.UseFiles(argv[1], argv[2]);
+  arduinoio::BidirSerialRXModule module(&fake_arduino, atoi(argv[3]));
   char message[7] = "COUNT\0";
   arduinoio::Message counter_message(kOtherAddress, 6, message);
   bool do_find_replace = false;
