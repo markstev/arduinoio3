@@ -1,10 +1,10 @@
 #ifndef hardware_simulator_arduino_simulator_h_
 #define hardware_simulator_arduino_simulator_h_
 
+#include "arduino.h"
 #include <stdio.h>
 #include <map>
 
-// This interface mimics Arduino.h, so it can be used as a drop-in replacement.
 namespace arduinoio {
 
 // Interface for a variety of ways to check the current time, including fake clocks.
@@ -27,19 +27,6 @@ class FakeClock : public Clock {
 };
 
 FakeClock* GetFakeClock();
-
-class ArduinoInterface {
- public:
-   virtual ~ArduinoInterface() {}
-
-  virtual void digitalWrite(const unsigned int pin, bool value) = 0;
-  virtual bool digitalRead(const unsigned int pin) = 0;
-  virtual unsigned long micros() = 0;
-
-  virtual void write(const unsigned char c) = 0;
-  virtual int read() = 0;
-  virtual bool available() = 0;
-};
 
 class FakeArduino : public ArduinoInterface {
  public:

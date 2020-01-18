@@ -1,14 +1,11 @@
 package(default_visibility = ["//visibility:public"])
 
-cc_library(name = "hardware_abstraction",
-           # TODO: alternate implementation for arduino mode.
-           hdrs = ["arduino.h"],
-           deps = [":arduino_simulator"])
-
-
 cc_library(name = "arduino_simulator",
            srcs = ["arduino_simulator.cc"],
-           hdrs = ["arduino_simulator.h"])
+           hdrs = [
+               "arduino.h",
+               "arduino_simulator.h",
+           ])
 
 cc_test(name = "arduino_simulator_test",
         srcs = ["arduino_simulator_test.cc"],
@@ -49,11 +46,13 @@ cc_library(
 cc_library(
     name = "serial_link",
     srcs = ["bidir_serial_module.cc"],
-    hdrs = ["bidir_serial_module.h"],
+    hdrs = [
+        "arduino.h",
+        "bidir_serial_module.h",
+    ],
     deps = [
         ":uc_module",
         ":message",
-        ":arduino_simulator",
     ],
 )
 
@@ -61,6 +60,7 @@ cc_test(
     name = "bidir_serial_module_test",
     srcs = ["bidir_serial_module_test.cc"],
     deps = [
+        ":arduino_simulator",
         ":serial_link",
         "@google_googletest//:gtest",
         "@google_googletest//:gtest_main"
@@ -80,11 +80,13 @@ cc_binary(
 cc_library(
     name = "arduinoio",
     srcs = ["arduinoio.cc"],
-    hdrs = ["arduinoio.h"],
+    hdrs = [
+        "arduino.h",
+        "arduinoio.h"
+    ],
     deps = [
         ":message",
         ":uc_module",
         ":serial_link",
-        ":arduino_simulator",
     ],
 )

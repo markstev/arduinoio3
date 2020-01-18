@@ -1,6 +1,7 @@
 
 #include "bidir_serial_module.h"
 #include <cmath>
+#include <stdio.h>
 
 namespace arduinoio {
 namespace {

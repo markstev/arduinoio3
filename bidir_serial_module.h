@@ -3,7 +3,7 @@
 
 #include "message.h"
 #include "uc_module.h"
-#include "arduino_simulator.h"
+#include "arduino.h"
 
 namespace arduinoio {
 
