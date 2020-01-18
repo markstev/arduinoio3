@@ -1,6 +1,6 @@
 
 #include "bidir_serial_module.h"
-#include <cmath>
+//#include <cmath>
 #include <stdio.h>
 
 namespace arduinoio {
@@ -86,8 +86,9 @@ const Message* BidirSerialRXModule::Tick() {
       break;
     case READY_AND_SENDING: {
       const int kMaxBytesToSend = 0x0f;
-      const int num_bytes_to_send = fmin(kMaxBytesToSend,
-          length_sending_ - next_send_index_);
+      const int total_bytes_left = length_sending_ - next_send_index_;
+      const int num_bytes_to_send = total_bytes_left < kMaxBytesToSend ?
+          total_bytes_left : kMaxBytesToSend;
       arduino_->write(transmit_state_ | num_bytes_to_send);
       for (int i = 0; i < num_bytes_to_send; ++i, ++next_send_index_) {
         arduino_->write(bytes_sending_[next_send_index_]);

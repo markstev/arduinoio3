@@ -58,10 +58,6 @@ endif()
 
 enable_testing()
 
-add_library(arduino_simulator
-  arduino_simulator.cc
-  arduino.h
-  arduino_simulator.h)
 add_library(message
   message.cc
   message.h)
