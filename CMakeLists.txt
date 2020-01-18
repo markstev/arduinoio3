@@ -58,9 +58,6 @@ endif()
 
 enable_testing()
 
-add_library(hardware_abstraction INTERFACE)
-target_link_libraries(hardware_abstraction INTERFACE
-  arduino_simulator)
 add_library(arduino_simulator
   arduino_simulator.cc
   arduino.h
@@ -73,18 +70,18 @@ target_link_libraries(uc_module INTERFACE
   message)
 add_library(serial_link
   bidir_serial_module.cc
+  arduino.h
   bidir_serial_module.h)
 target_link_libraries(serial_link
   uc_module
-  message
-  arduino_simulator)
+  message)
 add_library(arduinoio
   arduinoio.cc
+  arduino.h
   arduinoio.h)
 target_link_libraries(arduinoio
   message
   uc_module
-  serial_link
-  arduino_simulator)
+  serial_link)
 
 
